@@ -121,8 +121,8 @@ export class OlympusSlotScene extends Phaser.Scene {
     this.bgOverlay.fillRect(0, 0, width, height);
 
     // ---- Greek temple pillar frame ----
-    this.gridOriginX = (width - GRID_W) / 2;
-    this.gridOriginY = Math.max(70, (height - GRID_H) / 2 + 30);
+    this.gridOriginX = (this.scale.width - GRID_W) / 2;
+    this.gridOriginY = (this.scale.height - GRID_H) / 2 + 24;
 
     // Opaque reel-window backplate so symbols are always clearly readable
     // regardless of what the background photo contains.
@@ -311,16 +311,16 @@ export class OlympusSlotScene extends Phaser.Scene {
     const container = this.add.container(x, y);
 
     const bg = this.add.graphics();
-    bg.fillStyle(sym.color, 0.1);
-    bg.fillRoundedRect(-CELL / 2 + 2, -CELL / 2 + 2, CELL - 4, CELL - 4, 10);
-    bg.lineStyle(1, sym.color, 0.25);
-    bg.strokeRoundedRect(-CELL / 2 + 2, -CELL / 2 + 2, CELL - 4, CELL - 4, 10);
+    bg.clear();
+    bg.fillStyle(0x1a1040, 0.75);
+    bg.fillRoundedRect(-CELL / 2, -CELL / 2, CELL, CELL, 12);
+    bg.lineStyle(1.5, 0xd4af37, 0.6);
+    bg.strokeRoundedRect(-CELL / 2, -CELL / 2, CELL, CELL, 12);
 
     const glow = this.add.rectangle(0, 0, CELL - 6, CELL - 6, sym.color, 0).setStrokeStyle(2, sym.color, 0);
     const sprite = this.add.image(0, 0, SYM_KEY(sym.id));
-    // Optimized sizing: 92% fills the cell beautifully while keeping symbols
-    // clearly readable with proper padding from cell borders.
-    sprite.setDisplaySize(Math.round(CELL * 0.92), Math.round(CELL * 0.92));
+    sprite.setDisplaySize(SYM_SIZE, SYM_SIZE);
+    sprite.setOrigin(0.5, 0.5);
 
     container.add([bg, glow, sprite]);
     this.gridContainer.add(container);
