@@ -41,6 +41,57 @@ export type Database = {
         }
         Relationships: []
       }
+      deposit_requests: {
+        Row: {
+          amount: number
+          created_at: string | null
+          crypto_address: string | null
+          crypto_currency: string | null
+          currency: string
+          id: string
+          method: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          tx_hash: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          crypto_address?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          id?: string
+          method: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          crypto_address?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       game_rounds: {
         Row: {
           bet_amount: number
@@ -314,11 +365,63 @@ export type Database = {
         }
         Relationships: []
       }
+      withdrawal_requests: {
+        Row: {
+          amount: number
+          created_at: string | null
+          crypto_currency: string | null
+          currency: string
+          destination: string
+          id: string
+          method: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          tx_hash: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          destination: string
+          id?: string
+          method: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          destination?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      add_test_credit: { Args: { p_amount: number }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -336,6 +439,15 @@ export type Database = {
           p_payout?: number
           p_result?: Json
           p_server_seed?: string
+        }
+        Returns: Json
+      }
+      request_withdrawal: {
+        Args: {
+          p_amount: number
+          p_crypto_currency?: string
+          p_destination: string
+          p_method: string
         }
         Returns: Json
       }
