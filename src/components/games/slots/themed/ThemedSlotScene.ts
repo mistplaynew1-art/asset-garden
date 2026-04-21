@@ -210,13 +210,29 @@ export function makeThemedSceneClass(sceneKey: string) {
 
     /* ----------------------- backdrop / ambient layers -------------------- */
     private drawBackdropGradient(w: number, h: number) {
+      // Themed photo background (when a background.jpg/png exists in the folder)
+      const bgKey = `themed-bg-${this.theme.id}`;
+      if (this.textures.exists(bgKey)) {
+        const photo = this.add.image(w / 2, h / 2, bgKey).setDepth(-110);
+        const tex = photo.texture.getSourceImage() as HTMLImageElement;
+        if (tex && tex.width > 0 && tex.height > 0) {
+          const s = Math.max(w / tex.width, h / tex.height);
+          photo.setScale(s);
+        } else {
+          photo.setDisplaySize(w, h);
+        }
+        photo.setAlpha(0.55);
+      }
       const g = this.add.graphics().setDepth(-100);
       const base = this.theme.backgroundColor;
-      // radial spotlight: lighter center, darker edges
+      // radial spotlight: lighter center, darker edges (lower alpha so the
+      // photo behind reads through when present)
+      const hasPhoto = this.textures.exists(bgKey);
+      const baseAlpha = hasPhoto ? 0.03 : 0.06;
       for (let i = 0; i < 18; i++) {
         const t = i / 17;
         const r = Math.max(w, h) * (1 - t * 0.85);
-        const alpha = 0.06 + t * 0.06;
+        const alpha = baseAlpha + t * baseAlpha;
         const tint = Phaser.Display.Color.IntegerToColor(base);
         const lighten = Math.round(28 * (1 - t));
         const c = Phaser.Display.Color.GetColor(
