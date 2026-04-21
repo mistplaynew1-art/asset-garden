@@ -111,6 +111,12 @@ export function makeThemedSceneClass(sceneKey: string) {
           if (!this.textures.exists(key)) this.load.image(key, url);
         }
       });
+      // Auto-load themed background.jpg/png when present in the folder
+      const bgUrl = getThemeSymbolAsset(this.theme.id, 'background');
+      if (bgUrl) {
+        const bgKey = `themed-bg-${this.theme.id}`;
+        if (!this.textures.exists(bgKey)) this.load.image(bgKey, bgUrl);
+      }
     }
 
     setTurbo(on: boolean) { this.turbo = on; this.reels.forEach(r => r.setTurbo(on)); }
