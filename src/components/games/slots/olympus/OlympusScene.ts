@@ -21,11 +21,12 @@ import { screenShake, flashColor, sparkleBurst, landingRing } from '../core/Slot
 
 export const COLS = 6;
 export const ROWS = 5;
-// Larger cells so each symbol reads clearly at the responsive Phaser FIT
-// scale on mobile/desktop. The previous 88px cells produced a grid that
-// looked tiny against the surrounding stage padding.
-export const CELL = 110;
-export const GAP = 8;
+// Step 1 (surgical sizing pass): tighter cells with explicit padding so
+// symbols always render with the same drawable area regardless of FIT scale.
+export const CELL = 128;
+export const GAP = 6;
+export const PADDING = 5;
+export const SYM_SIZE = CELL - PADDING * 2 - 6; // 112px drawable area
 export const GRID_W = COLS * CELL + (COLS - 1) * GAP;
 export const GRID_H = ROWS * CELL + (ROWS - 1) * GAP;
 
