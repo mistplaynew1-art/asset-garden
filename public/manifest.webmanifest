@@ -1,0 +1,21 @@
+{
+  "name": "Casino — Play & Win",
+  "short_name": "Casino",
+  "description": "Provably fair crypto casino with slots, originals, and sports betting",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020408",
+  "theme_color": "#00f5ff",
+  "orientation": "portrait-primary",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" },
+    { "src": "/placeholder.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    { "name": "Play Crash", "url": "/game/crash", "description": "Play Crash game" },
+    { "name": "Slots", "url": "/slots", "description": "Browse slots" },
+    { "name": "Wallet", "url": "/wallet", "description": "Manage your wallet" }
+  ]
+}

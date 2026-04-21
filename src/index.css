@@ -1,97 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Orbitron:wght@500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ------------------------------------------------------------------ */
+/* GODMODE v6 — raw hex tokens (use via var(--name) in components)     */
+/* These coexist with the HSL semantic tokens below. Spec source:      */
+/*   casino-alchemy-lab-GODMODE-PROMPT-v6.md § DESIGN SYSTEM           */
+/* ------------------------------------------------------------------ */
+:root {
+  --bg-void: #020408;
+  --bg-surface: #080d14;
+  --bg-elevated: #0d1520;
+  --bg-hover: #131e2e;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(0, 245, 255, 0.3);
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+  --neon-blue-hex: #00f5ff;
+  --neon-gold-hex: #ffd700;
+  --neon-green-hex: #00ff88;
+  --neon-red-hex: #ff4466;
+  --neon-purple-hex: #b44fff;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+  --mult-tier-1: #ffffff; /* 1.00×–1.99× */
+  --mult-tier-2: #ffd700; /* 2.00×–4.99× */
+  --mult-tier-3: #ff8c00; /* 5.00×–9.99× */
+  --mult-tier-4: #ff4500; /* 10×–24.99× */
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+  --text-primary: rgba(255, 255, 255, 0.95);
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-muted: rgba(255, 255, 255, 0.3);
+}
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+:root {
+  --radius: 0.75rem;
+  --background: 230 30% 10%;
+  --foreground: 220 15% 90%;
+  --card: 230 25% 12%;
+  --card-foreground: 220 15% 90%;
+  --popover: 230 25% 12%;
+  --popover-foreground: 220 15% 90%;
+  --primary: 225 85% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 230 20% 15%;
+  --secondary-foreground: 220 15% 90%;
+  --muted: 230 15% 18%;
+  --muted-foreground: 225 10% 50%;
+  --accent: 230 20% 15%;
+  --accent-foreground: 220 15% 90%;
+  --destructive: 0 75% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 230 15% 18%;
+  --input: 230 15% 18%;
+  --ring: 225 85% 50%;
+  --success: 155 65% 45%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+  /* Casino neon tokens */
+  --neon-blue: 225 85% 50%;
+  --neon-green: 155 65% 45%;
+  --neon-gold: 42 80% 55%;
+  --neon-red: 0 75% 50%;
+  --neon-purple: 280 70% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+  /* Surfaces */
+  --surface: 230 25% 12%;
+  --elevated: 230 20% 15%;
+  --void: 230 35% 8%;
+  --overlay: 230 30% 6%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+  /* Glow tokens */
+  --glow-green: 155 65% 45%;
+  --glow-red: 0 75% 50%;
+  --glow-gold: 42 80% 55%;
+  --glow-blue: 225 85% 50%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+  /* Sidebar */
+  --sidebar-background: 230 30% 9%;
+  --sidebar-foreground: 225 10% 60%;
+  --sidebar-primary: 225 85% 50%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 230 20% 15%;
+  --sidebar-accent-foreground: 220 15% 90%;
+  --sidebar-border: 230 15% 14%;
+  --sidebar-ring: 225 85% 50%;
 
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+  /* Charts */
+  --chart-1: 225 85% 50%;
+  --chart-2: 155 65% 45%;
+  --chart-3: 42 80% 55%;
+  --chart-4: 0 75% 50%;
+  --chart-5: 280 70% 50%;
 }
 
 @layer base {
@@ -100,6 +101,202 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    /* Mandatory: tabular numerals everywhere to prevent layout shift */
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* Mobile-first clamp() typography — readable at 375px, scales up to desktop */
+  h1 { font-size: clamp(1.75rem, 4.5vw + 0.5rem, 3rem); line-height: 1.1; }
+  h2 { font-size: clamp(1.4rem, 3vw + 0.4rem, 2.25rem); line-height: 1.15; }
+  h3 { font-size: clamp(1.15rem, 2vw + 0.4rem, 1.75rem); line-height: 1.2; }
+  h4 { font-size: clamp(1rem, 1.2vw + 0.4rem, 1.35rem); line-height: 1.25; }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Syne', system-ui, sans-serif;
+    color: var(--text-primary);
+  }
+
+  /* Numbers, multipliers, money — Orbitron + tabular */
+  .num, .mult, [data-numeric] {
+    font-family: 'Orbitron', 'DM Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum';
+  }
+
+  /* All interactive targets must be ≥44×44 on touch (WCAG / iOS HIG) */
+  @media (hover: none) and (pointer: coarse) {
+    button, a, [role='button'], input[type='button'], input[type='submit'] {
+      min-height: 44px;
+      min-width: 44px;
+    }
   }
 }
+
+@layer utilities {
+  .font-display {
+    font-family: 'Syne', system-ui, sans-serif;
+  }
+
+  .font-mono {
+    font-family: 'DM Mono', monospace;
+  }
+
+  .text-glow-green {
+    color: hsl(var(--glow-green));
+  }
+
+  .text-glow-red {
+    color: hsl(var(--glow-red));
+  }
+
+  .text-glow-gold {
+    color: hsl(var(--glow-gold));
+  }
+
+  .text-glow-blue {
+    color: hsl(var(--glow-blue));
+  }
+
+  .neon-glow-blue {
+    box-shadow: 0 0 24px hsl(var(--neon-blue) / 0.25);
+  }
+
+  .neon-glow-green {
+    box-shadow: 0 0 24px hsl(var(--neon-green) / 0.25);
+  }
+
+  .neon-glow-gold {
+    box-shadow: 0 0 24px hsl(var(--neon-gold) / 0.25);
+  }
+
+  .neon-glow-red {
+    box-shadow: 0 0 24px hsl(var(--neon-red) / 0.25);
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--neon-blue)), hsl(var(--neon-green)));
+  }
+
+  .gradient-gold {
+    background: linear-gradient(135deg, hsl(var(--neon-gold)), hsl(42 70% 45%));
+  }
+
+  .gradient-danger {
+    background: linear-gradient(135deg, hsl(var(--neon-red)), hsl(0 65% 40%));
+  }
+
+  .gradient-purple {
+    background: linear-gradient(135deg, hsl(var(--neon-purple)), hsl(280 60% 40%));
+  }
+
+  .bg-void {
+    background-color: hsl(var(--void));
+  }
+
+  .bg-surface {
+    background-color: hsl(var(--surface));
+  }
+
+  .bg-elevated {
+    background-color: hsl(var(--elevated));
+  }
+
+  .bg-overlay {
+    background-color: hsl(var(--overlay));
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
+
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Animated shimmer for loading */
+  .shimmer {
+    background: linear-gradient(90deg, hsl(var(--surface)) 25%, hsl(var(--elevated)) 50%, hsl(var(--surface)) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* GODMODE premium feel utilities */
+  .neon-text {
+    text-shadow: 0 0 8px currentColor, 0 0 30px currentColor;
+  }
+  .neon-button {
+    transition: box-shadow 200ms var(--ease-out, ease-out), transform 150ms ease-out;
+  }
+  .neon-button:hover {
+    box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.1), 0 0 18px rgba(0, 245, 255, 0.25);
+  }
+  .panel-dots {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .text-rainbow {
+    background: linear-gradient(90deg, #ff4466, #ffd700, #00ff88, #00f5ff, #b44fff, #ff4466);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: hue-cycle 2s linear infinite;
+  }
+}
+
+@keyframes hue-cycle {
+  from { background-position: 0% 50%; }
+  to   { background-position: 300% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes pulse-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.animate-pulse-neon { animation: pulse-neon 1.6s ease-in-out infinite; }
+
+/* Premium game stage — radial spotlight + animated grid */
+.game-stage {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 30%, hsl(var(--primary) / 0.12), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, hsl(var(--neon-purple) / 0.08), transparent 70%),
+    linear-gradient(180deg, hsl(var(--surface)), hsl(var(--void)));
+  overflow: hidden;
+}
+.game-stage::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black, transparent 80%);
+  pointer-events: none;
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-40px); opacity: 0; }
+}
+.animate-float-up { animation: float-up 1.2s ease-out forwards; }
