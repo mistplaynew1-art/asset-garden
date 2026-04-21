@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_rounds: {
+        Row: {
+          bet_amount: number
+          client_seed: string | null
+          created_at: string
+          game_type: string
+          id: string
+          nonce: number | null
+          public_state: Json
+          server_seed: string | null
+          server_seed_hash: string | null
+          settled_at: string | null
+          state: Json
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bet_amount: number
+          client_seed?: string | null
+          created_at?: string
+          game_type: string
+          id?: string
+          nonce?: number | null
+          public_state?: Json
+          server_seed?: string | null
+          server_seed_hash?: string | null
+          settled_at?: string | null
+          state?: Json
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bet_amount?: number
+          client_seed?: string | null
+          created_at?: string
+          game_type?: string
+          id?: string
+          nonce?: number | null
+          public_state?: Json
+          server_seed?: string | null
+          server_seed_hash?: string | null
+          settled_at?: string | null
+          state?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_settings: {
         Row: {
           description: string | null
@@ -38,6 +89,101 @@ export type Database = {
           key?: string
           updated_at?: string | null
           value?: string | null
+        }
+        Relationships: []
+      }
+      crash_bets: {
+        Row: {
+          auto_cashout: number | null
+          bet_amount: number
+          cashout_multiplier: number | null
+          created_at: string
+          game_type: string
+          id: string
+          payout: number
+          round_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_cashout?: number | null
+          bet_amount: number
+          cashout_multiplier?: number | null
+          created_at?: string
+          game_type: string
+          id?: string
+          payout?: number
+          round_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_cashout?: number | null
+          bet_amount?: number
+          cashout_multiplier?: number | null
+          created_at?: string
+          game_type?: string
+          id?: string
+          payout?: number
+          round_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crash_bets_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "crash_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crash_rounds: {
+        Row: {
+          crash_multiplier: number
+          crashed_at: string | null
+          created_at: string
+          id: string
+          round_number: number
+          running_starts_at: string | null
+          server_seed: string | null
+          server_seed_hash: string
+          settled_at: string | null
+          status: string
+          updated_at: string
+          waiting_starts_at: string
+        }
+        Insert: {
+          crash_multiplier: number
+          crashed_at?: string | null
+          created_at?: string
+          id?: string
+          round_number?: number
+          running_starts_at?: string | null
+          server_seed?: string | null
+          server_seed_hash: string
+          settled_at?: string | null
+          status?: string
+          updated_at?: string
+          waiting_starts_at?: string
+        }
+        Update: {
+          crash_multiplier?: number
+          crashed_at?: string | null
+          created_at?: string
+          id?: string
+          round_number?: number
+          running_starts_at?: string | null
+          server_seed?: string | null
+          server_seed_hash?: string
+          settled_at?: string | null
+          status?: string
+          updated_at?: string
+          waiting_starts_at?: string
         }
         Relationships: []
       }
@@ -422,6 +568,7 @@ export type Database = {
     }
     Functions: {
       add_test_credit: { Args: { p_amount: number }; Returns: Json }
+      advance_crash_round: { Args: never; Returns: Json }
       approve_deposit: {
         Args: { p_note?: string; p_request_id: string }
         Returns: Json
@@ -430,6 +577,7 @@ export type Database = {
         Args: { p_note?: string; p_request_id: string }
         Returns: Json
       }
+      cashout_crash_bet: { Args: { p_bet_id: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -450,6 +598,15 @@ export type Database = {
         }
         Returns: Json
       }
+      place_crash_bet: {
+        Args: {
+          p_auto_cashout?: number
+          p_bet_amount: number
+          p_game_type: string
+          p_round_id: string
+        }
+        Returns: Json
+      }
       reject_deposit: {
         Args: { p_note?: string; p_request_id: string }
         Returns: Json
@@ -464,6 +621,31 @@ export type Database = {
           p_crypto_currency?: string
           p_destination: string
           p_method: string
+        }
+        Returns: Json
+      }
+      settle_active_round: {
+        Args: {
+          p_multiplier: number
+          p_payout: number
+          p_result: Json
+          p_round_id: string
+          p_status: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      start_active_round: {
+        Args: {
+          p_bet_amount: number
+          p_client_seed: string
+          p_game_type: string
+          p_nonce: number
+          p_public_state: Json
+          p_server_seed: string
+          p_server_seed_hash: string
+          p_state: Json
+          p_user_id: string
         }
         Returns: Json
       }
