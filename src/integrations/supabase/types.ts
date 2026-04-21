@@ -14,16 +14,644 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      active_rounds: {
+        Row: {
+          bet_amount: number
+          client_seed: string | null
+          created_at: string
+          game_type: string
+          id: string
+          nonce: number | null
+          public_state: Json
+          server_seed: string | null
+          server_seed_hash: string | null
+          settled_at: string | null
+          state: Json
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bet_amount: number
+          client_seed?: string | null
+          created_at?: string
+          game_type: string
+          id?: string
+          nonce?: number | null
+          public_state?: Json
+          server_seed?: string | null
+          server_seed_hash?: string | null
+          settled_at?: string | null
+          state?: Json
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bet_amount?: number
+          client_seed?: string | null
+          created_at?: string
+          game_type?: string
+          id?: string
+          nonce?: number | null
+          public_state?: Json
+          server_seed?: string | null
+          server_seed_hash?: string | null
+          settled_at?: string | null
+          state?: Json
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      admin_settings: {
+        Row: {
+          description: string | null
+          id: string
+          is_secret: boolean | null
+          key: string
+          updated_at: string | null
+          value: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          is_secret?: boolean | null
+          key: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          is_secret?: boolean | null
+          key?: string
+          updated_at?: string | null
+          value?: string | null
+        }
+        Relationships: []
+      }
+      crash_bets: {
+        Row: {
+          auto_cashout: number | null
+          bet_amount: number
+          cashout_multiplier: number | null
+          created_at: string
+          game_type: string
+          id: string
+          payout: number
+          round_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_cashout?: number | null
+          bet_amount: number
+          cashout_multiplier?: number | null
+          created_at?: string
+          game_type: string
+          id?: string
+          payout?: number
+          round_id: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_cashout?: number | null
+          bet_amount?: number
+          cashout_multiplier?: number | null
+          created_at?: string
+          game_type?: string
+          id?: string
+          payout?: number
+          round_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crash_bets_round_id_fkey"
+            columns: ["round_id"]
+            isOneToOne: false
+            referencedRelation: "crash_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crash_rounds: {
+        Row: {
+          crash_multiplier: number
+          crashed_at: string | null
+          created_at: string
+          id: string
+          round_number: number
+          running_starts_at: string | null
+          server_seed: string | null
+          server_seed_hash: string
+          settled_at: string | null
+          status: string
+          updated_at: string
+          waiting_starts_at: string
+        }
+        Insert: {
+          crash_multiplier: number
+          crashed_at?: string | null
+          created_at?: string
+          id?: string
+          round_number?: number
+          running_starts_at?: string | null
+          server_seed?: string | null
+          server_seed_hash: string
+          settled_at?: string | null
+          status?: string
+          updated_at?: string
+          waiting_starts_at?: string
+        }
+        Update: {
+          crash_multiplier?: number
+          crashed_at?: string | null
+          created_at?: string
+          id?: string
+          round_number?: number
+          running_starts_at?: string | null
+          server_seed?: string | null
+          server_seed_hash?: string
+          settled_at?: string | null
+          status?: string
+          updated_at?: string
+          waiting_starts_at?: string
+        }
+        Relationships: []
+      }
+      deposit_requests: {
+        Row: {
+          amount: number
+          created_at: string | null
+          crypto_address: string | null
+          crypto_currency: string | null
+          currency: string
+          id: string
+          method: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          tx_hash: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          crypto_address?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          id?: string
+          method: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          crypto_address?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      game_rounds: {
+        Row: {
+          bet_amount: number
+          client_seed: string | null
+          created_at: string | null
+          game_type: string
+          id: string
+          multiplier: number | null
+          nonce: number | null
+          payout: number | null
+          result: Json | null
+          server_seed: string | null
+          server_seed_hash: string | null
+          status: string | null
+          user_id: string
+          won: boolean | null
+        }
+        Insert: {
+          bet_amount: number
+          client_seed?: string | null
+          created_at?: string | null
+          game_type: string
+          id?: string
+          multiplier?: number | null
+          nonce?: number | null
+          payout?: number | null
+          result?: Json | null
+          server_seed?: string | null
+          server_seed_hash?: string | null
+          status?: string | null
+          user_id: string
+          won?: boolean | null
+        }
+        Update: {
+          bet_amount?: number
+          client_seed?: string | null
+          created_at?: string | null
+          game_type?: string
+          id?: string
+          multiplier?: number | null
+          nonce?: number | null
+          payout?: number | null
+          result?: Json | null
+          server_seed?: string | null
+          server_seed_hash?: string | null
+          status?: string | null
+          user_id?: string
+          won?: boolean | null
+        }
+        Relationships: []
+      }
+      games: {
+        Row: {
+          category: string
+          config: Json | null
+          created_at: string | null
+          house_edge: number | null
+          id: string
+          is_active: boolean | null
+          is_featured: boolean | null
+          is_hot: boolean | null
+          is_new: boolean | null
+          max_bet: number | null
+          min_bet: number | null
+          name: string
+          provider: string | null
+          rtp: number | null
+          slug: string
+          sort_order: number | null
+          thumbnail_url: string | null
+        }
+        Insert: {
+          category?: string
+          config?: Json | null
+          created_at?: string | null
+          house_edge?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          is_hot?: boolean | null
+          is_new?: boolean | null
+          max_bet?: number | null
+          min_bet?: number | null
+          name: string
+          provider?: string | null
+          rtp?: number | null
+          slug: string
+          sort_order?: number | null
+          thumbnail_url?: string | null
+        }
+        Update: {
+          category?: string
+          config?: Json | null
+          created_at?: string | null
+          house_edge?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          is_hot?: boolean | null
+          is_new?: boolean | null
+          max_bet?: number | null
+          min_bet?: number | null
+          name?: string
+          provider?: string | null
+          rtp?: number | null
+          slug?: string
+          sort_order?: number | null
+          thumbnail_url?: string | null
+        }
+        Relationships: []
+      }
+      house_wallet: {
+        Row: {
+          balance: number | null
+          id: string
+          total_bets: number | null
+          total_bets_today: number | null
+          total_payouts: number | null
+          total_payouts_today: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          balance?: number | null
+          id?: string
+          total_bets?: number | null
+          total_bets_today?: number | null
+          total_payouts?: number | null
+          total_payouts_today?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          balance?: number | null
+          id?: string
+          total_bets?: number | null
+          total_bets_today?: number | null
+          total_payouts?: number | null
+          total_payouts_today?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      platform_stats: {
+        Row: {
+          id: string
+          stat_key: string
+          stat_value: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          stat_key: string
+          stat_value?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          stat_key?: string
+          stat_value?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string
+          level: number
+          updated_at: string | null
+          user_id: string
+          username: string | null
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          level?: number
+          updated_at?: string | null
+          user_id: string
+          username?: string | null
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          level?: number
+          updated_at?: string | null
+          user_id?: string
+          username?: string | null
+          xp?: number
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          balance_after: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          reference_id: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          reference_id?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallets: {
+        Row: {
+          balance: number | null
+          currency: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          balance?: number | null
+          currency?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          balance?: number | null
+          currency?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      withdrawal_requests: {
+        Row: {
+          amount: number
+          created_at: string | null
+          crypto_currency: string | null
+          currency: string
+          destination: string
+          id: string
+          method: string
+          notes: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          tx_hash: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          destination: string
+          id?: string
+          method: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          crypto_currency?: string | null
+          currency?: string
+          destination?: string
+          id?: string
+          method?: string
+          notes?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_test_credit: { Args: { p_amount: number }; Returns: Json }
+      advance_crash_round: { Args: never; Returns: Json }
+      approve_deposit: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
+      approve_withdrawal: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
+      cashout_crash_bet: { Args: { p_bet_id: string }; Returns: Json }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      place_bet: {
+        Args: {
+          p_bet_amount: number
+          p_client_seed?: string
+          p_game_type: string
+          p_multiplier?: number
+          p_nonce?: number
+          p_payout?: number
+          p_result?: Json
+          p_server_seed?: string
+        }
+        Returns: Json
+      }
+      place_crash_bet: {
+        Args: {
+          p_auto_cashout?: number
+          p_bet_amount: number
+          p_game_type: string
+          p_round_id: string
+        }
+        Returns: Json
+      }
+      reject_deposit: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
+      reject_withdrawal: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
+      request_withdrawal: {
+        Args: {
+          p_amount: number
+          p_crypto_currency?: string
+          p_destination: string
+          p_method: string
+        }
+        Returns: Json
+      }
+      settle_active_round: {
+        Args: {
+          p_multiplier: number
+          p_payout: number
+          p_result: Json
+          p_round_id: string
+          p_status: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      start_active_round: {
+        Args: {
+          p_bet_amount: number
+          p_client_seed: string
+          p_game_type: string
+          p_nonce: number
+          p_public_state: Json
+          p_server_seed: string
+          p_server_seed_hash: string
+          p_state: Json
+          p_user_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +778,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
