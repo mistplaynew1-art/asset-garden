@@ -422,6 +422,14 @@ export type Database = {
     }
     Functions: {
       add_test_credit: { Args: { p_amount: number }; Returns: Json }
+      approve_deposit: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
+      approve_withdrawal: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -440,6 +448,14 @@ export type Database = {
           p_result?: Json
           p_server_seed?: string
         }
+        Returns: Json
+      }
+      reject_deposit: {
+        Args: { p_note?: string; p_request_id: string }
+        Returns: Json
+      }
+      reject_withdrawal: {
+        Args: { p_note?: string; p_request_id: string }
         Returns: Json
       }
       request_withdrawal: {
