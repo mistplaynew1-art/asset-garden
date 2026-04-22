@@ -199,6 +199,26 @@ export const playBlackjack = (data: {
 // Alias for backwards compatibility
 export const playBlackjackRound = playBlackjack;
 
+export interface LottoResult { picks: number[]; drawn: number[]; matches: number }
+export const playLottoGame = (data: { betAmount: number; picks: number[] }) =>
+  play<LottoResult>('lotto', data.betAmount, { picks: data.picks });
+
+export interface ChickenCrossResult {
+  difficulty: 'easy' | 'medium' | 'hard' | 'daredevil';
+  lanes: Array<{ index: number; safe: boolean; multiplier: number }>;
+  cashedAt?: number;
+  deathLane?: number;
+}
+export const playChickenCross = (data: {
+  betAmount: number;
+  difficulty: 'easy' | 'medium' | 'hard' | 'daredevil';
+  lanes: number;
+}) =>
+  play<ChickenCrossResult>('chicken-cross', data.betAmount, {
+    difficulty: data.difficulty,
+    lanes: data.lanes,
+  });
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Slot games - Server-authoritative
 // ─────────────────────────────────────────────────────────────────────────────

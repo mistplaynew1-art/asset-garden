@@ -24,6 +24,8 @@ import OlympusSlot from '@/components/games/slots/olympus/OlympusSlot';
 const BonanzaSlot = lazy(() => import('@/components/games/slots/bonanza/BonanzaSlot'));
 const BigBassSlot = lazy(() => import('@/components/games/slots/bigbass/BigBassSlot'));
 const ThemedSlotMachine = lazy(() => import('@/components/games/slots/themed/ThemedSlotMachine'));
+const LottoGame = lazy(() => import('@/components/games/lotto/LottoGame'));
+const ChickenCrossGame = lazy(() => import('@/components/games/chicken-cross/ChickenCrossGame'));
 
 const GAME_MAP: Record<string, ComponentType> = {
   dice: DiceGame, crash: CrashGame, mines: MinesGame, plinko: PlinkoGame,
@@ -33,6 +35,8 @@ const GAME_MAP: Record<string, ComponentType> = {
   'gates-olympus': OlympusSlot,
   'sweet-bonanza': BonanzaSlot,
   'big-bass': BigBassSlot,
+  lotto: LottoGame,
+  'chicken-cross': ChickenCrossGame,
 };
 
 

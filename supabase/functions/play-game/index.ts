@@ -32,6 +32,8 @@ import { playThemedSlot } from './slots-themed.ts';
 import { playBigBassSlots } from './slots-bigbass.ts';
 import { playOlympusSlot } from './slots-olympus.ts';
 import { playBonanzaSlot } from './slots-bonanza.ts';
+import { playLotto } from './lotto.ts';
+import { playChickenCross } from './chicken-cross.ts';
 import { handleStatefulRound } from './stateful.ts';
 
 type GameType =
@@ -50,7 +52,10 @@ type GameType =
   // Gates of Olympus — 6×5 tumble with Zeus multipliers.
   | 'olympus-slot' | 'gates-olympus'
   // Sweet Bonanza — 6×5 cluster pays with tumble.
-  | 'bonanza-slot' | 'sweet-bonanza';
+  | 'bonanza-slot' | 'sweet-bonanza'
+  // New originals
+  | 'lotto'
+  | 'chicken-cross';
 
 interface PlayRequest {
   gameType: GameType;
@@ -81,6 +86,8 @@ const HANDLERS: Record<GameType, (bet: number, params: Record<string, unknown>, 
   'gates-olympus': playOlympusSlot,
   'bonanza-slot': playBonanzaSlot,
   'sweet-bonanza': playBonanzaSlot,
+  'lotto': playLotto,
+  'chicken-cross': playChickenCross,
 };
 
 function jsonResponse(body: unknown, status = 200): Response {

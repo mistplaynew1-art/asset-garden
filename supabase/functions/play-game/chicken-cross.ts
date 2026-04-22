@@ -1,0 +1,54 @@
+// Chicken Cross — server-authoritative road-crossing game.
+// Lane-by-lane survival; matches existing Difficulty enum.
+import { FloatStream } from './rng.ts';
+import type { Outcome } from './games.ts';
+
+type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nightmare' | 'daredevil';
+
+const DIFFICULTY: Record<Difficulty, { hitChance: number; step: number }> = {
+  easy:      { hitChance: 0.04, step: 1.06 },
+  medium:    { hitChance: 0.10, step: 1.18 },
+  hard:      { hitChance: 0.20, step: 1.45 },
+  extreme:   { hitChance: 0.30, step: 1.90 },
+  nightmare: { hitChance: 0.40, step: 2.60 },
+  daredevil: { hitChance: 0.35, step: 2.10 },
+};
+
+const MAX_LANES = 24;
+
+export async function playChickenCross(
+  _bet: number,
+  params: Record<string, unknown>,
+  rng: FloatStream,
+): Promise<Outcome> {
+  const diffKey = (typeof params.difficulty === 'string' ? params.difficulty : 'easy') as Difficulty;
+  const cfg = DIFFICULTY[diffKey] ?? DIFFICULTY.easy;
+  const targetLanes = Math.max(
+    1,
+    Math.min(MAX_LANES, Math.floor(Number(params.lanes ?? 1))),
+  );
+
+  let multiplier = 1;
+  const lanes: Array<{ index: number; safe: boolean; multiplier: number }> = [];
+
+  for (let i = 1; i <= targetLanes; i++) {
+    const r = await rng.next();
+    const safe = r >= cfg.hitChance;
+    if (!safe) {
+      lanes.push({ index: i, safe: false, multiplier: 0 });
+      return {
+        won: false,
+        multiplier: 0,
+        result: { difficulty: diffKey, lanes, deathLane: i },
+      };
+    }
+    multiplier = +(multiplier * cfg.step).toFixed(2);
+    lanes.push({ index: i, safe: true, multiplier });
+  }
+
+  return {
+    won: true,
+    multiplier,
+    result: { difficulty: diffKey, lanes, cashedAt: targetLanes },
+  };
+}
