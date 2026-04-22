@@ -3,7 +3,7 @@
 import { FloatStream } from './rng.ts';
 import type { Outcome } from './games.ts';
 
-type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nightmare';
+type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nightmare' | 'daredevil';
 
 const DIFFICULTY: Record<Difficulty, { hitChance: number; step: number }> = {
   easy:      { hitChance: 0.04, step: 1.06 },
@@ -11,6 +11,7 @@ const DIFFICULTY: Record<Difficulty, { hitChance: number; step: number }> = {
   hard:      { hitChance: 0.20, step: 1.45 },
   extreme:   { hitChance: 0.30, step: 1.90 },
   nightmare: { hitChance: 0.40, step: 2.60 },
+  daredevil: { hitChance: 0.35, step: 2.10 },
 };
 
 const MAX_LANES = 24;
