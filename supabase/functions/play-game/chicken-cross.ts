@@ -1,21 +1,16 @@
 // Chicken Cross — server-authoritative road-crossing game.
-// Each lane has a difficulty-adjusted hit probability. The chicken advances
-// lane-by-lane; if it survives, the multiplier grows. Client sends `lanes`
-// (how many lanes attempted) and `cashout=true` to lock in the win.
-//
-// This is stateless: the server replays all lanes with one RNG stream and
-// returns whichever outcome happened first (death OR cashout at requested lane).
+// Lane-by-lane survival; matches existing Difficulty enum.
 import { FloatStream } from './rng.ts';
 import type { Outcome } from './games.ts';
 
-type Difficulty = 'easy' | 'medium' | 'hard' | 'daredevil';
+type Difficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nightmare';
 
-// Hit probability per lane and per-lane multiplier step.
 const DIFFICULTY: Record<Difficulty, { hitChance: number; step: number }> = {
   easy:      { hitChance: 0.04, step: 1.06 },
   medium:    { hitChance: 0.10, step: 1.18 },
   hard:      { hitChance: 0.20, step: 1.45 },
-  daredevil: { hitChance: 0.35, step: 2.10 },
+  extreme:   { hitChance: 0.30, step: 1.90 },
+  nightmare: { hitChance: 0.40, step: 2.60 },
 };
 
 const MAX_LANES = 24;

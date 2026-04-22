@@ -1,6 +1,6 @@
 /**
  * Lotto — pick 6 numbers from 1..49. Server draws 6 winners.
- * Pure UI; all RNG is server-authoritative via the play-game edge function.
+ * All RNG is server-authoritative via the play-game edge function.
  */
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -22,23 +22,22 @@ const PAYOUT_TABLE: Array<{ matches: number; multi: string }> = [
 ];
 
 export default function LottoGame() {
-  const [betAmount, setBetAmount] = useState(1);
+  const [betAmount, setBetAmount] = useState('1');
   const [picks, setPicks] = useState<number[]>([]);
   const [drawn, setDrawn] = useState<number[]>([]);
   const [matches, setMatches] = useState<number | null>(null);
-  const [drawing, setDrawing] = useState(false);
   const [busy, setBusy] = useState(false);
   const { toast } = useToast();
 
   const togglePick = (n: number) => {
-    if (drawing || busy) return;
+    if (busy) return;
     setPicks((p) =>
       p.includes(n) ? p.filter((x) => x !== n) : p.length < PICK_COUNT ? [...p, n] : p,
     );
   };
 
   const quickPick = () => {
-    if (drawing || busy) return;
+    if (busy) return;
     const set = new Set<number>();
     while (set.size < PICK_COUNT) set.add(Math.floor(Math.random() * POOL) + 1);
     setPicks(Array.from(set).sort((a, b) => a - b));
@@ -56,29 +55,27 @@ export default function LottoGame() {
       return;
     }
     setBusy(true);
-    setDrawing(true);
     setDrawn([]);
     setMatches(null);
     try {
-      const res = await playLottoGame({ betAmount, picks });
+      const res = await playLottoGame({ betAmount: parseFloat(betAmount), picks });
       const result = res.result as LottoResult;
-      // Reveal drawn balls one by one
       for (let i = 0; i < result.drawn.length; i++) {
         await new Promise((r) => setTimeout(r, 450));
         setDrawn(result.drawn.slice(0, i + 1));
-        playSound('click', 0.25);
+        playSound('keno.draw');
       }
       setMatches(result.matches);
       if (res.won) {
-        playSound('win', 0.5);
-        toast({ title: `Won ${res.multiplier}× — $${res.payout.toFixed(2)}`, description: `${result.matches} matches` });
+        playSound('keno.win');
+        toast({
+          title: `Won ${res.multiplier}× — $${res.payout.toFixed(2)}`,
+          description: `${result.matches} matches`,
+        });
       } else {
-        playSound('lose', 0.3);
+        playSound('lose');
       }
-    } catch {
-      // toast handled by callPlayGame
     } finally {
-      setDrawing(false);
       setBusy(false);
     }
   };
@@ -87,13 +84,13 @@ export default function LottoGame() {
     <GameShell
       title="Lotto"
       betAmount={betAmount}
-      onBetAmountChange={setBetAmount}
+      setBetAmount={setBetAmount}
       onPlay={onPlay}
-      isPlaying={busy}
-      canPlay={!busy && picks.length === PICK_COUNT}
+      playing={busy}
+      disabled={picks.length !== PICK_COUNT}
       playLabel="Draw"
     >
-      <div className="space-y-4">
+      <div className="w-full space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Ticket className="w-4 h-4 text-primary" />

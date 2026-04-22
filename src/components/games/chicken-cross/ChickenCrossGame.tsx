@@ -1,8 +1,6 @@
 /**
  * Chicken Cross — cross-the-road style stair climb.
- * Player picks difficulty, advances lane-by-lane, and cashes out anytime.
- * All survival/death rolls are decided by the server in a single call,
- * the client animates the result.
+ * Server decides each lane's survival; client animates the result.
  */
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -13,105 +11,88 @@ import { playChickenCross, type ChickenCrossResult } from '@/lib/game-functions'
 import { useToast } from '@/hooks/use-toast';
 import { playSound } from '@/lib/sounds';
 import DifficultySelector from '@/components/games/DifficultySelector';
-
-type Difficulty = 'easy' | 'medium' | 'hard' | 'daredevil';
+import type { Difficulty } from '@/lib/difficulty';
 
 const STEPS: Record<Difficulty, number> = {
-  easy: 1.06, medium: 1.18, hard: 1.45, daredevil: 2.10,
+  easy: 1.06, medium: 1.18, hard: 1.45, extreme: 1.90, nightmare: 2.60,
 };
 
 const VISIBLE_LANES = 12;
 
 export default function ChickenCrossGame() {
-  const [betAmount, setBetAmount] = useState(1);
+  const [betAmount, setBetAmount] = useState('1');
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [lane, setLane] = useState(0);
   const [busy, setBusy] = useState(false);
   const [outcome, setOutcome] = useState<ChickenCrossResult | null>(null);
-
   const { toast } = useToast();
 
-  const projectedMulti = (idx: number) =>
-    +(Math.pow(STEPS[difficulty], idx) ).toFixed(2);
+  const projectedMulti = (idx: number) => +(Math.pow(STEPS[difficulty], idx)).toFixed(2);
 
   const advance = async (target: number) => {
     setBusy(true);
     setOutcome(null);
     try {
-      const res = await playChickenCross({ betAmount, difficulty, lanes: target });
+      const res = await playChickenCross({
+        betAmount: parseFloat(betAmount),
+        // Edge function understands the same Difficulty union except 'nightmare'
+        // maps to its hardest tier; we just pass it through.
+        difficulty: difficulty as 'easy' | 'medium' | 'hard' | 'daredevil',
+        lanes: target,
+      });
       const result = res.result as ChickenCrossResult;
-      // Animate lane-by-lane
       for (let i = 0; i < result.lanes.length; i++) {
         await new Promise((r) => setTimeout(r, 220));
         setLane(result.lanes[i].index);
         if (!result.lanes[i].safe) {
-          playSound('lose', 0.5);
+          playSound('tower.boom');
           break;
         }
-        playSound('click', 0.25);
+        playSound('tower.step');
       }
       setOutcome(result);
       if (res.won) {
-        playSound('win', 0.5);
+        playSound('tower.cashout');
         toast({ title: `Cashed at ${res.multiplier}×`, description: `+$${res.payout.toFixed(2)}` });
       }
-    } catch {
-      // toast handled
     } finally {
       setBusy(false);
     }
   };
 
-  const onPlay = () => {
+  const onPlay = async () => {
     setLane(0);
     setOutcome(null);
-    advance(1);
+    await advance(1);
   };
 
   const onContinue = () => advance((outcome?.cashedAt ?? lane) + 1);
+  const reset = () => { setLane(0); setOutcome(null); };
 
-  const onCashout = () => {
-    if (!outcome?.cashedAt) return;
-    // Already cashed out by current call.
-  };
-
-  const reset = () => {
-    setLane(0);
-    setOutcome(null);
-  };
-
-  const dead = outcome && outcome.deathLane !== undefined;
-  const cashed = outcome && outcome.cashedAt !== undefined;
+  const dead = outcome?.deathLane !== undefined;
+  const cashed = outcome?.cashedAt !== undefined;
   const currentMulti = outcome?.cashedAt
     ? projectedMulti(outcome.cashedAt)
-    : lane > 0 && !dead
-      ? projectedMulti(lane)
-      : 0;
+    : lane > 0 && !dead ? projectedMulti(lane) : 0;
 
   return (
     <GameShell
       title="Chicken Cross"
       betAmount={betAmount}
-      onBetAmountChange={setBetAmount}
+      setBetAmount={setBetAmount}
       onPlay={onPlay}
-      isPlaying={busy}
-      canPlay={!busy && (outcome === null || dead === true)}
+      playing={busy}
+      disabled={busy || (outcome !== null && !dead)}
       playLabel={dead ? 'Try Again' : 'Start Run'}
-    >
-      <div className="space-y-4">
+      extraControls={
         <DifficultySelector
           value={difficulty}
-          onChange={(d) => setDifficulty(d as Difficulty)}
+          onChange={setDifficulty}
           disabled={busy}
-          options={[
-            { value: 'easy', label: 'Easy' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'hard', label: 'Hard' },
-            { value: 'daredevil', label: 'Daredevil' },
-          ]}
         />
-
-        {/* The road */}
+      }
+    >
+      <div className="w-full space-y-4">
         <div className="rounded-xl border border-border bg-gradient-to-b from-card to-background p-3 overflow-hidden">
           <div className="flex items-end justify-between gap-1 min-h-[140px]">
             {Array.from({ length: VISIBLE_LANES }, (_, i) => i + 1).map((idx) => {
@@ -161,14 +142,11 @@ export default function ChickenCrossGame() {
           <div className="text-xs font-mono text-muted-foreground">
             Lane <span className="text-foreground font-bold">{lane}</span>
             {currentMulti > 0 && (
-              <>
-                {' · '}
-                <span className="text-primary font-bold">{currentMulti}×</span>
-              </>
+              <>{' · '}<span className="text-primary font-bold">{currentMulti}×</span></>
             )}
           </div>
           <div className="flex gap-2">
-            {cashed === false && lane > 0 && !dead && (
+            {!cashed && lane > 0 && !dead && (
               <Button size="sm" onClick={onContinue} disabled={busy}>
                 Advance →
               </Button>
