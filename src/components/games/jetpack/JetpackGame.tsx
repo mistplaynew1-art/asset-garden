@@ -11,6 +11,7 @@ import { useAppStore } from '@/stores/app-store';
 import { playSound } from '@/lib/sounds';
 import { haptic } from '@/lib/haptics';
 import Jetpack3DScene from './Jetpack3DScene';
+import PlayerGhostsOverlay from '../shared/PlayerGhostsOverlay';
 import GameLoadingScreen from '../shared/GameLoadingScreen';
 import { getMultiplierColor } from '@/lib/animations';
 import { useAuth } from '@/hooks/use-auth';
@@ -283,8 +284,16 @@ export default function JetpackGame() {
             className="absolute inset-0"
           />
         </Suspense>
-        
-        
+
+        <PlayerGhostsOverlay
+          bets={bets.filter((b) => b.game_type === 'jetpack')}
+          multiplier={multiplier}
+          status={status}
+          variant="jetpack"
+          excludeUserId={user?.id ?? null}
+          className="z-[5]"
+        />
+
         {/* Multiplier Overlay - Top Right Corner */}
         <div className="absolute top-4 right-4 pointer-events-none z-10">
           <motion.div

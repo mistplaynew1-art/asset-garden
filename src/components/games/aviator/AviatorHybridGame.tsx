@@ -9,6 +9,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Aviator3DScene from './Aviator3DScene';
+import PlayerGhostsOverlay from '../shared/PlayerGhostsOverlay';
 import { crash } from '@/lib/sounds';
 import { useAuth } from '@/hooks/use-auth';
 import { useCrashRound } from '@/hooks/use-crash-round';
@@ -24,7 +25,7 @@ export default function AviatorHybridGame({ className = '', gameType = 'crash' }
   const { user } = useAuth();
   const [betAmount, setBetAmount] = useState(100);
 
-  const { round, myBet, multiplier, placeBet, cashout } = useCrashRound({
+  const { round, bets, myBet, multiplier, placeBet, cashout } = useCrashRound({
     gameType,
     userId: user?.id ?? null,
   });
@@ -67,6 +68,15 @@ export default function AviatorHybridGame({ className = '', gameType = 'crash' }
   return (
     <div className={`relative w-full h-full overflow-hidden ${className}`}>
       <Aviator3DScene multiplier={multiplier} phase={phase} className="absolute inset-0 z-0" />
+
+      <PlayerGhostsOverlay
+        bets={bets.filter((b) => b.game_type === gameType)}
+        multiplier={multiplier}
+        status={status}
+        variant="plane"
+        excludeUserId={user?.id ?? null}
+        className="z-[5]"
+      />
 
       <div className="absolute inset-0 z-10 pointer-events-none">
         <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-background/60 to-transparent" />
