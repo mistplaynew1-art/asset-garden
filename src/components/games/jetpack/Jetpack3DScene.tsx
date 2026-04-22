@@ -401,14 +401,20 @@ const SceneContent = memo(function SceneContent({
   const characterPosition = useRef(new THREE.Vector3(-3, 1, 0));
   const { camera } = useThree();
 
-  // Camera follow
-  useFrame((state, delta) => {
-    const targetX = characterPosition.current.x + 4;
-    const targetY = Math.max(3, characterPosition.current.y + 2);
-    
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, delta * 3);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, delta * 3);
-    camera.lookAt(characterPosition.current);
+  // Camera follow — pulls back as the pilot climbs so it stays framed
+  useFrame((_, delta) => {
+    const cp = characterPosition.current;
+    // Clamp framing so character sits slightly left-of-center
+    const targetX = THREE.MathUtils.clamp(cp.x + 3, -2, 8);
+    const targetY = THREE.MathUtils.clamp(cp.y + 1.5, 3, 12);
+    // Dolly back proportional to altitude so plume + body stay visible
+    const altitude = Math.max(0, cp.y);
+    const targetZ = THREE.MathUtils.clamp(8 + altitude * 0.6 + Math.max(0, cp.x) * 0.3, 8, 22);
+
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, delta * 2.5);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, delta * 2.5);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, delta * 2);
+    camera.lookAt(cp.x, cp.y, 0);
   });
 
   const handlePositionUpdate = useCallback((pos: THREE.Vector3) => {
