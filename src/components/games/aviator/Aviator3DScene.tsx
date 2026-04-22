@@ -336,12 +336,21 @@ const SceneContent = memo(function SceneContent({
   const characterPosition = useRef(new THREE.Vector3());
 
   useFrame((state, delta) => {
-    const targetX = characterPosition.current.x + 4;
-    const targetY = Math.max(3, characterPosition.current.y + 2);
-    
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, delta * 3);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, delta * 3);
-    camera.lookAt(characterPosition.current);
+    // Frame the plane: keep it slightly left-of-center and well within view.
+    // Camera trails a fixed offset so the plane never drifts off-screen at
+    // high multipliers (where x clamps at 10 and y rises with log(mult)).
+    const charX = characterPosition.current.x;
+    const charY = characterPosition.current.y;
+    const targetX = charX + 3;          // plane sits ~3 units left of center
+    const targetY = Math.max(3.5, charY + 1.5);
+    const targetZ = 8 + Math.min(6, Math.max(0, charY * 0.4)); // pull back as it climbs
+
+    const k = Math.min(1, delta * 4);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, k);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, k);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, k);
+    // Look slightly above the plane so the trail stays visible below.
+    camera.lookAt(charX, charY + 0.4, 0);
   });
 
   const handlePositionUpdate = useCallback((pos: THREE.Vector3) => {
