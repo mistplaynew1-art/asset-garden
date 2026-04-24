@@ -164,7 +164,7 @@ export default function HomePage() {
           {liveLoading
             ? Array.from({ length: 4 }).map((_, i) => <GameSkeleton key={i} />)
             : (liveGames ?? []).map((t) => (
-              <GameCard key={t.id} id={t.slug} name={t.name} provider={t.provider ?? undefined} rtp={`${t.rtp}%`} isLive={true} />
+              <GameCard key={t.id} id={t.slug} name={t.name} provider={t.provider ?? undefined} rtp={`${t.rtp}%`} category="live" isLive={true} />
             ))}
         </div>
       </Section>
