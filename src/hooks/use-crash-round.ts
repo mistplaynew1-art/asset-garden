@@ -198,7 +198,9 @@ export function useCrashRound({ gameType, userId }: UseCrashRoundOptions) {
     return data as { ok?: boolean; error?: string; multiplier?: number; payout?: number };
   }, []);
 
-  const myBet = userId ? bets.find((b) => b.user_id === userId && b.game_type === gameType) ?? null : null;
+  const myBet = userId && round
+    ? bets.find((b) => b.user_id === userId && b.game_type === gameType && b.round_id === round.id) ?? null
+    : null;
 
   return { round, bets, myBet, history, multiplier, placeBet, cashout };
 }
