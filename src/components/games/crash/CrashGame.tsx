@@ -254,7 +254,7 @@ export default function CrashGame() {
       betAmount={betAmount}
       setBetAmount={setBetAmount}
       onPlay={handlePlaceBet}
-      playing={status === 'waiting' || status === 'running'}
+      playing={false}
       playLabel={playLabel}
       disabled={!!myBet || status !== 'waiting' || !user}
       extraControls={extraControls}
