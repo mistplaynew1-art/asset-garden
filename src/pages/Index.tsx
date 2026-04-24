@@ -153,7 +153,7 @@ export default function HomePage() {
           {slotsLoading
             ? Array.from({ length: 12 }).map((_, i) => <GameSkeleton key={i} />)
             : (slots ?? []).slice(0, 12).map((g) => (
-              <GameCard key={g.id} id={g.slug} name={g.name} provider={g.provider ?? undefined} rtp={`${g.rtp}%`} isHot={g.is_hot ?? false} isNew={g.is_new ?? false} />
+              <GameCard key={g.id} id={g.slug} name={g.name} provider={g.provider ?? undefined} rtp={`${g.rtp}%`} category="slot" isHot={g.is_hot ?? false} isNew={g.is_new ?? false} />
             ))}
         </div>
       </Section>
