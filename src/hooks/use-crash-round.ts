@@ -162,19 +162,40 @@ export function useCrashRound({ gameType, userId }: UseCrashRoundOptions) {
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [round?.status, round?.running_starts_at, round?.crash_multiplier]);
 
-  // ── Self-heal: kick the engine if no update in 5s while in waiting/crashed ──
+  // ── Drive the engine forward as soon as the current phase is due ──
+  // The server's `advance_crash_round` RPC is idempotent — many clients can
+  // call it and only one transition happens. We poll fast (500ms) and ping
+  // the tick function the moment a phase has elapsed so rounds don't stall.
   useEffect(() => {
     if (!round) return;
+    let lastPing = 0;
+    const ping = () => {
+      const now = Date.now();
+      if (now - lastPing < 700) return; // throttle to ~1.5/s per client
+      lastPing = now;
+      supabase.functions.invoke('crash-tick', { body: {} }).catch(() => {});
+    };
     const interval = setInterval(() => {
-      const ageMs = Date.now() - new Date(round.waiting_starts_at).getTime();
-      const stale = round.status === 'waiting' && ageMs > 8000;
-      const crashedTooLong = round.status === 'crashed' && round.crashed_at && Date.now() - new Date(round.crashed_at).getTime() > 5000;
-      if (stale || crashedTooLong) {
-        supabase.functions.invoke('crash-tick', { body: {} }).catch(() => {});
+      const now = Date.now();
+      if (round.status === 'waiting') {
+        // waiting phase = 6s
+        if (now - new Date(round.waiting_starts_at).getTime() >= 6000) ping();
+      } else if (round.status === 'running' && round.running_starts_at && round.crash_multiplier) {
+        // crash time = when m(t) reaches crash_multiplier
+        const t = (now - new Date(round.running_starts_at).getTime()) / 1000;
+        const m = 1 + 0.06 * Math.pow(Math.max(t, 0), 1.6);
+        if (m >= round.crash_multiplier) ping();
+      } else if (round.status === 'crashed' && round.crashed_at) {
+        // crashed display = 3s
+        if (now - new Date(round.crashed_at).getTime() >= 3000) ping();
+      } else if (round.status === 'settled') {
+        ping();
       }
-    }, 2000);
+    }, 500);
+    // also kick once immediately on mount/round change
+    ping();
     return () => clearInterval(interval);
-  }, [round?.id, round?.status]);
+  }, [round?.id, round?.status, round?.running_starts_at, round?.crash_multiplier, round?.crashed_at, round?.waiting_starts_at]);
 
   // ── Actions ────────────────────────────────────────────────────────
   const placeBet = useCallback(
