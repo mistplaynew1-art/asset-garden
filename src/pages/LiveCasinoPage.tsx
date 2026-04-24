@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Video, Users, Filter } from 'lucide-react';
 import { useGames } from '@/hooks/use-game-data';
-import { getLiveThumbnail } from '@/lib/assets-live';
+import { getGameThumbnail } from '@/lib/game-thumbnails';
 
 const FILTERS = [
   { key: 'all', label: 'All Tables' },
@@ -82,19 +82,12 @@ export default function LiveCasinoPage() {
               to={`/game/${t.slug}`}
               className="group relative aspect-[4/5] rounded-xl overflow-hidden border border-border bg-surface hover:border-primary/40 transition-all hover:scale-[1.02]"
             >
-              {(() => {
-                const thumb = getLiveThumbnail(t.slug) ?? t.thumbnail_url;
-                return thumb ? (
-                  <img
-                    src={thumb}
-                    alt={t.name}
-                    loading="lazy"
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-neon-purple/20 to-neon-pink/20" />
-                );
-              })()}
+              <img
+                src={getGameThumbnail(t.slug, 'live', t.thumbnail_url)}
+                alt={t.name}
+                loading="lazy"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-overlay via-overlay/30 to-transparent" />
               <div className="absolute top-2 left-2 flex gap-1">
                 <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-neon-red/90 text-foreground animate-pulse-neon">● LIVE</span>
